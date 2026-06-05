@@ -3,7 +3,7 @@ import { GeoJSON, MapContainer, TileLayer } from 'react-leaflet';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
 import type { Layer, PathOptions } from 'leaflet';
 import Legend from './Legend';
-import stockholmZones from '../data/stockholm_demo_zones.geojson';
+import stockholmZonesRaw from '../data/stockholm_demo_zones.geojson?raw';
 
 export type DemoLayer = 'temperature' | 'vegetation' | 'priority' | 'context';
 
@@ -20,7 +20,7 @@ type ZoneProperties = {
 type ZoneFeature = Feature<Geometry, ZoneProperties>;
 type ZoneCollection = FeatureCollection<Geometry, ZoneProperties>;
 
-const zones = stockholmZones as ZoneCollection;
+const zones = JSON.parse(stockholmZonesRaw) as ZoneCollection;
 
 const layerOptions: { id: DemoLayer; label: string }[] = [
   { id: 'temperature', label: 'Temperature' },

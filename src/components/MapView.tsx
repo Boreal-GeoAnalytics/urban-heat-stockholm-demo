@@ -191,8 +191,8 @@ function MapView() {
           {error && <div className="map-state error-state">{error}</div>}
           <MapContainer center={defaultCenter} zoom={11} minZoom={10} maxZoom={15} scrollWheelZoom>
             <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution="Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community"
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
             />
             {data && (
               <>

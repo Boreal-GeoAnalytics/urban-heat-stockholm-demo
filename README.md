@@ -1,6 +1,6 @@
 # Stockholm Urban Heat Hotspots & Cooling Priority
 
-A public frontend demonstration for **Boreal GeoAnalytics**. The app visualizes GeoJSON-based hotspot indicators for Stockholm, Sweden using Vite, React, TypeScript, and Leaflet.
+A public frontend demonstration for **Boreal GeoAnalytics**. The app visualizes a GeoJSON-based interactive hotspot dashboard for Stockholm, Sweden using Vite, React, TypeScript, and Leaflet.
 
 This is a static website prototype for communicating urban heat exposure, green cooling capacity, impervious surface pressure, and cooling intervention priority. It is not a production analytical platform.
 
@@ -13,7 +13,7 @@ The dashboard presents four public-facing map layers:
 - Green Cooling Capacity
 - Impervious Surface Pressure
 
-Internally, the map visualizes a GeoJSON grid. The current version uses a lightweight synthetic grid so the interface can run as a static public demo.
+Internally, the map visualizes a GeoJSON grid. The current version uses a lightweight synthetic grid so the interface can run as a static public demo. Future versions may add optional PNG or raster overlay layers for smoother hotspot visualization, while GeoJSON remains the interaction and summary layer.
 
 ## Data Strategy
 
@@ -29,7 +29,15 @@ At build and deployment time, Vite serves that file under the configured GitHub 
 /urban-heat-stockholm-demo/data/stockholm_urban_heat_hotspot_grid.geojson
 ```
 
-The frontend does **not** run Google Earth Engine in the browser. A future Earth Engine workflow can export a validated GeoJSON grid with the same property schema, and this file can be replaced without changing the UI architecture.
+The frontend does **not** run Google Earth Engine in the browser. The future private GEE workflow will export replacement GeoJSON data with the same property schema, and the public data file can be replaced without changing the UI architecture.
+
+The active public demo dataset is:
+
+```text
+public/data/stockholm_urban_heat_hotspot_grid.geojson
+```
+
+The file `data/stockholm_city.geojson` is not loaded by the app. It is retained only as a reference boundary/context file and should be moved to the future private GEE workflow repository once that workflow exists.
 
 ## Expected GeoJSON Schema
 
@@ -55,7 +63,10 @@ Each feature should include:
 Class fields should use:
 
 ```text
-low | moderate | high | very_high
+low
+moderate
+high
+very_high
 ```
 
 Public index fields must use a `0–100` scale so legends, popups, and summary metrics remain comparable:

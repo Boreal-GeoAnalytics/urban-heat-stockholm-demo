@@ -71,7 +71,11 @@ function validateProperties(properties: unknown, featureIndex: number): asserts 
 
   for (const field of numericFields) {
     const value = properties[field];
-    if (value === null && typeof dataQuality === 'string' && nullExplainingQualities.has(dataQuality as DataQuality)) {
+    if (
+      (value === null || value === undefined) &&
+      typeof dataQuality === 'string' &&
+      nullExplainingQualities.has(dataQuality as DataQuality)
+    ) {
       continue;
     }
     if (typeof value !== 'number' || Number.isNaN(value)) {

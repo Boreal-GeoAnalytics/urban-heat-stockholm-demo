@@ -1,51 +1,92 @@
-# Stockholm Urban Heat Demonstration
+# Stockholm Urban Heat Hotspots & Cooling Priority
 
-A production-ready static web demonstration for **Boreal GeoAnalytics** showing how urban heat and environmental exposure indicators can be communicated through an interactive geospatial interface for Stockholm, Sweden.
+A public frontend demonstration for **Boreal GeoAnalytics**. The app visualizes GeoJSON-based hotspot indicators for Stockholm, Sweden using Vite, React, TypeScript, and Leaflet.
 
-The demo includes:
+This is a static website prototype for communicating urban heat exposure, green cooling capacity, impervious surface pressure, and cooling intervention priority. It is not a production analytical platform.
 
-- A Leaflet basemap centered on Stockholm with OpenStreetMap attribution.
-- Simplified demonstration polygons for land surface temperature, vegetation cooling potential, heat exposure priority zones, and blue-green context.
-- Layer controls, a legend, and zone popups with planning-relevant attributes.
-- Responsive consulting-company styling using Boreal GeoAnalytics branding and a Swedish flag-inspired palette.
+## What The Demo Shows
 
-## Data Notice
+The dashboard presents four public-facing map layers:
 
-The included GeoJSON data are synthetic and simplified. They are intended for public communication and methodological illustration only, not operational planning, regulatory analysis, or production environmental assessment.
+- Heat Exposure Hotspots
+- Cooling Intervention Priority
+- Green Cooling Capacity
+- Impervious Surface Pressure
+
+Internally, the map visualizes a GeoJSON grid. The current version uses a lightweight synthetic grid so the interface can run as a static public demo.
+
+## Data Strategy
+
+The app loads its public GeoJSON file at runtime from:
+
+```text
+public/data/stockholm_urban_heat_hotspot_grid.geojson
+```
+
+At build and deployment time, Vite serves that file under the configured GitHub Pages base path:
+
+```text
+/urban-heat-stockholm-demo/data/stockholm_urban_heat_hotspot_grid.geojson
+```
+
+The frontend does **not** run Google Earth Engine in the browser. A future Earth Engine workflow can export a validated GeoJSON grid with the same property schema, and this file can be replaced without changing the UI architecture.
+
+## Expected GeoJSON Schema
+
+Each feature should include:
+
+- `grid_id`
+- `mean_lst_c`
+- `mean_ndvi`
+- `mean_ndbi`
+- `mean_ndwi`
+- `green_cooling_capacity`
+- `impervious_surface_pressure`
+- `heat_exposure_index`
+- `cooling_intervention_priority`
+- `heat_exposure_class`
+- `cooling_priority_class`
+- `green_cooling_class`
+- `impervious_pressure_class`
+- `hotspot_label`
+- `planning_relevance`
+- `suggested_intervention`
+
+Class fields should use:
+
+```text
+low | moderate | high | very_high
+```
 
 ## Run Locally
-
-Install dependencies and start the Vite development server:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Build the static site:
+## Build
 
 ```bash
 npm run build
 ```
 
-Preview the production build:
+## Deploy To GitHub Pages
 
-```bash
-npm run preview
-```
-
-## GitHub Pages Deployment
-
-The app is configured for GitHub Pages with the Vite base path:
+The Vite base path is configured in `vite.config.ts`:
 
 ```ts
 base: '/urban-heat-stockholm-demo/'
 ```
 
-The workflow at `.github/workflows/deploy.yml` builds the app and deploys the `dist` artifact to GitHub Pages when changes are pushed to `main`, or when the workflow is run manually.
+The workflow at `.github/workflows/deploy.yml` builds the static site and deploys the `dist` artifact to GitHub Pages.
 
-Before deployment, enable GitHub Pages for the repository and select **GitHub Actions** as the Pages source.
+To deploy:
 
-## Prototype Scope
+1. Enable GitHub Pages for the repository.
+2. Select **GitHub Actions** as the Pages source.
+3. Push to `main` or run the workflow manually.
 
-This is a public-facing demonstration prototype for a company website. It does not use private API keys, backend services, client data, or proprietary datasets. Production-level assessments can be adapted to specific cities, datasets, and decision-making needs.
+## Data Notice
+
+The included data are synthetic and simplified unless replaced by a validated Earth Engine export. The app is intended for public communication and methodological illustration only. It does not represent an official heat-risk assessment for Stockholm.

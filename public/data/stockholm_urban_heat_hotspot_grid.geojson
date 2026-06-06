@@ -1,0 +1,237 @@
+{
+  "type": "FeatureCollection",
+  "name": "stockholm_urban_heat_hotspot_grid",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "STHLM-001",
+        "mean_lst_c": 32.4,
+        "mean_ndvi": 0.38,
+        "mean_ndbi": 0.46,
+        "mean_ndwi": 0.08,
+        "green_cooling_capacity": 42,
+        "impervious_surface_pressure": 78,
+        "heat_exposure_index": 88,
+        "cooling_intervention_priority": 91,
+        "heat_exposure_class": "very_high",
+        "cooling_priority_class": "very_high",
+        "green_cooling_class": "moderate",
+        "impervious_pressure_class": "very_high",
+        "hotspot_label": "Central Stockholm Core",
+        "planning_relevance": "Dense urban fabric with high thermal exposure and limited cooling capacity.",
+        "suggested_intervention": "Prioritize street trees, shaded pedestrian corridors, and high-albedo surface retrofits."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [18.035, 59.324],
+            [18.079, 59.321],
+            [18.092, 59.339],
+            [18.052, 59.347],
+            [18.035, 59.324]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "STHLM-002",
+        "mean_lst_c": 31.6,
+        "mean_ndvi": 0.33,
+        "mean_ndbi": 0.42,
+        "mean_ndwi": 0.05,
+        "green_cooling_capacity": 36,
+        "impervious_surface_pressure": 72,
+        "heat_exposure_index": 76,
+        "cooling_intervention_priority": 82,
+        "heat_exposure_class": "high",
+        "cooling_priority_class": "high",
+        "green_cooling_class": "moderate",
+        "impervious_pressure_class": "high",
+        "hotspot_label": "Sodermalm Urban Ridge",
+        "planning_relevance": "High exposure conditions across compact blocks and active public-space corridors.",
+        "suggested_intervention": "Expand canopy cover and shaded routes near transit, schools, and high-footfall streets."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [18.015, 59.302],
+            [18.078, 59.296],
+            [18.106, 59.314],
+            [18.051, 59.324],
+            [18.015, 59.302]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "STHLM-003",
+        "mean_lst_c": 29.8,
+        "mean_ndvi": 0.42,
+        "mean_ndbi": 0.34,
+        "mean_ndwi": 0.22,
+        "green_cooling_capacity": 58,
+        "impervious_surface_pressure": 55,
+        "heat_exposure_index": 63,
+        "cooling_intervention_priority": 67,
+        "heat_exposure_class": "high",
+        "cooling_priority_class": "high",
+        "green_cooling_class": "high",
+        "impervious_pressure_class": "moderate",
+        "hotspot_label": "Kungsholmen Waterfront",
+        "planning_relevance": "Water influence reduces exposure, but hard surfaces still create localized heat pressure.",
+        "suggested_intervention": "Maintain waterfront cooling access and add shade to exposed quays and mobility corridors."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [17.985, 59.321],
+            [18.036, 59.317],
+            [18.044, 59.344],
+            [17.997, 59.353],
+            [17.985, 59.321]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "STHLM-004",
+        "mean_lst_c": 26.9,
+        "mean_ndvi": 0.62,
+        "mean_ndbi": 0.16,
+        "mean_ndwi": 0.18,
+        "green_cooling_capacity": 86,
+        "impervious_surface_pressure": 24,
+        "heat_exposure_index": 28,
+        "cooling_intervention_priority": 22,
+        "heat_exposure_class": "low",
+        "cooling_priority_class": "low",
+        "green_cooling_class": "very_high",
+        "impervious_pressure_class": "low",
+        "hotspot_label": "Djurgarden Green Corridor",
+        "planning_relevance": "Strong green cooling capacity and ecological continuity support citywide heat refuge functions.",
+        "suggested_intervention": "Protect existing vegetation structure and strengthen connections to surrounding neighborhoods."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [18.095, 59.315],
+            [18.171, 59.314],
+            [18.183, 59.339],
+            [18.112, 59.349],
+            [18.095, 59.315]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "STHLM-005",
+        "mean_lst_c": 30.7,
+        "mean_ndvi": 0.29,
+        "mean_ndbi": 0.51,
+        "mean_ndwi": 0.12,
+        "green_cooling_capacity": 31,
+        "impervious_surface_pressure": 84,
+        "heat_exposure_index": 83,
+        "cooling_intervention_priority": 89,
+        "heat_exposure_class": "very_high",
+        "cooling_priority_class": "very_high",
+        "green_cooling_class": "low",
+        "impervious_pressure_class": "very_high",
+        "hotspot_label": "Hammarby Urban Edge",
+        "planning_relevance": "High impervious pressure and moderate water influence create a priority cooling edge.",
+        "suggested_intervention": "Combine tree planting, cool pavements, and blue-green stormwater features in exposed areas."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [18.07, 59.285],
+            [18.139, 59.283],
+            [18.151, 59.306],
+            [18.093, 59.314],
+            [18.07, 59.285]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "STHLM-006",
+        "mean_lst_c": 27.8,
+        "mean_ndvi": 0.55,
+        "mean_ndbi": 0.24,
+        "mean_ndwi": 0.11,
+        "green_cooling_capacity": 74,
+        "impervious_surface_pressure": 38,
+        "heat_exposure_index": 41,
+        "cooling_intervention_priority": 39,
+        "heat_exposure_class": "moderate",
+        "cooling_priority_class": "moderate",
+        "green_cooling_class": "high",
+        "impervious_pressure_class": "moderate",
+        "hotspot_label": "North Stockholm Park Belt",
+        "planning_relevance": "Park and canopy assets provide cooling capacity near surrounding residential districts.",
+        "suggested_intervention": "Preserve cooling refuge access and extend green links toward warmer built-up edges."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [18.0, 59.352],
+            [18.075, 59.348],
+            [18.1, 59.379],
+            [18.018, 59.387],
+            [18.0, 59.352]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "STHLM-007",
+        "mean_lst_c": 30.2,
+        "mean_ndvi": 0.36,
+        "mean_ndbi": 0.39,
+        "mean_ndwi": 0.09,
+        "green_cooling_capacity": 49,
+        "impervious_surface_pressure": 64,
+        "heat_exposure_index": 68,
+        "cooling_intervention_priority": 72,
+        "heat_exposure_class": "high",
+        "cooling_priority_class": "high",
+        "green_cooling_class": "moderate",
+        "impervious_pressure_class": "high",
+        "hotspot_label": "Vasastan Mixed Urban Fabric",
+        "planning_relevance": "Mixed residential and commercial blocks show elevated exposure near major corridors.",
+        "suggested_intervention": "Target shaded public spaces, pocket greening, and reduced heat gain along street canyons."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [18.025, 59.338],
+            [18.075, 59.338],
+            [18.081, 59.359],
+            [18.032, 59.365],
+            [18.025, 59.338]
+          ]
+        ]
+      }
+    }
+  ]
+}

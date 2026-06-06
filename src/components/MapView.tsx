@@ -1,137 +1,193 @@
-import { useState } from 'react';
-import { GeoJSON, MapContainer, TileLayer } from 'react-leaflet';
-import type { Feature, FeatureCollection, Geometry } from 'geojson';
-import type { Layer, PathOptions } from 'leaflet';
+import { useEffect, useMemo, useState } from 'react';
+import { GeoJSON, MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { geoJSON as leafletGeoJSON } from 'leaflet';
+import type { Layer, LeafletMouseEvent, Path, PathOptions } from 'leaflet';
+import { layerConfigs, layerOrder } from '../config/layers';
+import { useGeoJsonData } from '../hooks/useGeoJsonData';
+import type { DemoLayer, UrbanHeatGridCollection, UrbanHeatGridFeature } from '../types/geo';
+import { formatClassLabel, formatNumber, getFeatureColor } from '../utils/colors';
 import Legend from './Legend';
-import stockholmZonesRaw from '../data/stockholm_demo_zones.geojson?raw';
+import MetricSummary from './MetricSummary';
 
-export type DemoLayer = 'temperature' | 'vegetation' | 'priority' | 'context';
+const defaultCenter: [number, number] = [59.3293, 18.0686];
 
-type ZoneProperties = {
-  zone_name: string;
-  mean_lst_c: number;
-  ndvi: number;
-  impervious_level: 'Low' | 'Moderate' | 'High' | 'Very high';
-  heat_exposure_class: 'Moderate' | 'High' | 'Very high';
-  planning_relevance: string;
-  context_class: 'Water influence' | 'Green corridor' | 'Dense urban fabric';
-};
+function FitBounds({ data }: { data: UrbanHeatGridCollection | null }) {
+  const map = useMap();
 
-type ZoneFeature = Feature<Geometry, ZoneProperties>;
-type ZoneCollection = FeatureCollection<Geometry, ZoneProperties>;
+  useEffect(() => {
+    if (!data || data.features.length === 0) {
+      return;
+    }
 
-const zones = JSON.parse(stockholmZonesRaw) as ZoneCollection;
+    const bounds = leafletGeoJSON(data).getBounds();
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [24, 24], maxZoom: 12 });
+    }
+  }, [data, map]);
 
-const layerOptions: { id: DemoLayer; label: string }[] = [
-  { id: 'temperature', label: 'Temperature' },
-  { id: 'vegetation', label: 'Vegetation' },
-  { id: 'priority', label: 'Priority Zones' },
-  { id: 'context', label: 'Blue-Green Context' },
-];
-
-const temperatureColors: Record<ZoneProperties['heat_exposure_class'], string> = {
-  Moderate: '#f6d38b',
-  High: '#f08a4b',
-  'Very high': '#c9432f',
-};
-
-const priorityColors: Record<ZoneProperties['heat_exposure_class'], string> = {
-  Moderate: '#f4d35e',
-  High: '#f49e4c',
-  'Very high': '#b8323a',
-};
-
-const contextColors: Record<ZoneProperties['context_class'], string> = {
-  'Water influence': '#6bb6d6',
-  'Green corridor': '#5aa36f',
-  'Dense urban fabric': '#9d8f7f',
-};
-
-function vegetationColor(ndvi: number) {
-  if (ndvi >= 0.48) return '#2f8f5b';
-  if (ndvi >= 0.34) return '#8abf5a';
-  return '#d7c35c';
+  return null;
 }
 
-function styleFeature(feature: ZoneFeature | undefined, activeLayer: DemoLayer): PathOptions {
-  const properties = feature?.properties;
-
-  if (!properties) {
-    return { color: '#006AA7', fillColor: '#006AA7', fillOpacity: 0.4, weight: 1 };
-  }
-
-  const fillColor =
-    activeLayer === 'temperature'
-      ? temperatureColors[properties.heat_exposure_class]
-      : activeLayer === 'vegetation'
-        ? vegetationColor(properties.ndvi)
-        : activeLayer === 'priority'
-          ? priorityColors[properties.heat_exposure_class]
-          : contextColors[properties.context_class];
-
+function styleFeature(feature: UrbanHeatGridFeature | undefined, activeLayer: DemoLayer): PathOptions {
   return {
     color: '#102a43',
-    fillColor,
-    fillOpacity: activeLayer === 'context' ? 0.56 : 0.68,
+    fillColor: getFeatureColor(feature, layerConfigs[activeLayer]),
+    fillOpacity: 0.7,
     opacity: 0.72,
-    weight: 1.4,
+    weight: 1.1,
   };
 }
 
-function bindPopup(feature: ZoneFeature, layer: Layer) {
+function popupContent(feature: UrbanHeatGridFeature) {
   const props = feature.properties;
-  layer.bindPopup(`
+
+  return `
     <section class="map-popup">
-      <h3>Zone: ${props.zone_name}</h3>
-      <p><strong>Mean land surface temperature:</strong> ${props.mean_lst_c.toFixed(1)} °C</p>
-      <p><strong>Vegetation index:</strong> ${props.ndvi.toFixed(2)}</p>
-      <p><strong>Impervious surface level:</strong> ${props.impervious_level}</p>
-      <p><strong>Heat exposure class:</strong> ${props.heat_exposure_class}</p>
+      <h3>${props.hotspot_label}</h3>
+      <p><strong>Grid ID:</strong> ${props.grid_id}</p>
+      <p><strong>Heat exposure:</strong> ${formatClassLabel(props.heat_exposure_class)} (${formatNumber(
+        props.heat_exposure_index,
+        0,
+      )} / 100)</p>
+      <p><strong>Cooling priority:</strong> ${formatClassLabel(props.cooling_priority_class)} (${formatNumber(
+        props.cooling_intervention_priority,
+        0,
+      )} / 100)</p>
+      <p><strong>Mean LST:</strong> ${formatNumber(props.mean_lst_c, 1)} °C</p>
+      <p><strong>NDVI:</strong> ${formatNumber(props.mean_ndvi, 2)}</p>
+      <p><strong>Impervious pressure:</strong> ${formatNumber(props.impervious_surface_pressure, 0)} / 100</p>
+      <p><strong>Green cooling capacity:</strong> ${formatNumber(props.green_cooling_capacity, 0)} / 100</p>
       <p><strong>Planning relevance:</strong> ${props.planning_relevance}</p>
+      <p><strong>Suggested intervention:</strong> ${props.suggested_intervention}</p>
     </section>
-  `);
+  `;
+}
+
+function selectedRows(feature: UrbanHeatGridFeature) {
+  const props = feature.properties;
+
+  return [
+    ['Grid ID', props.grid_id],
+    ['Heat exposure', `${formatClassLabel(props.heat_exposure_class)} (${formatNumber(props.heat_exposure_index, 0)} / 100)`],
+    [
+      'Cooling priority',
+      `${formatClassLabel(props.cooling_priority_class)} (${formatNumber(props.cooling_intervention_priority, 0)} / 100)`,
+    ],
+    ['Mean LST', `${formatNumber(props.mean_lst_c, 1)} °C`],
+    ['NDVI', formatNumber(props.mean_ndvi, 2)],
+    ['Impervious pressure', `${formatNumber(props.impervious_surface_pressure, 0)} / 100`],
+    ['Green cooling capacity', `${formatNumber(props.green_cooling_capacity, 0)} / 100`],
+  ];
 }
 
 function MapView() {
-  const [activeLayer, setActiveLayer] = useState<DemoLayer>('temperature');
+  const [activeLayer, setActiveLayer] = useState<DemoLayer>('heat_exposure');
+  const [selectedFeature, setSelectedFeature] = useState<UrbanHeatGridFeature | null>(null);
+  const { data, error, loading } = useGeoJsonData();
+  const activeConfig = layerConfigs[activeLayer];
+
+  const featureCountLabel = useMemo(() => {
+    const count = data?.features.length ?? 0;
+    return count === 1 ? '1 grid cell loaded' : `${count.toLocaleString('en-US')} grid cells loaded`;
+  }, [data]);
+
+  function bindInteractions(feature: UrbanHeatGridFeature, layer: Layer) {
+    layer.bindPopup(popupContent(feature), { maxWidth: 340 });
+
+    layer.on({
+      click: () => setSelectedFeature(feature),
+      mouseout: (event: LeafletMouseEvent) => {
+        const target = event.target as Path;
+        target.setStyle(styleFeature(feature, activeLayer));
+      },
+      mouseover: (event: LeafletMouseEvent) => {
+        const target = event.target as Path;
+        target.setStyle({
+          color: '#006AA7',
+          fillOpacity: 0.86,
+          opacity: 1,
+          weight: 2.4,
+        });
+        target.bringToFront();
+      },
+    });
+  }
 
   return (
-    <div className="map-card">
-      <div className="map-toolbar" aria-label="Layer controls">
-        <div>
-          <p className="eyebrow">Layer Controls</p>
-          <h2>Stockholm Demo Map</h2>
-        </div>
-        <div className="segmented-control" role="radiogroup" aria-label="Map demonstration layer">
-          {layerOptions.map((option) => (
-            <button
-              aria-checked={activeLayer === option.id}
-              className={activeLayer === option.id ? 'active' : ''}
-              key={option.id}
-              onClick={() => setActiveLayer(option.id)}
-              role="radio"
-              type="button"
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      </div>
+    <div className="map-dashboard">
+      <MetricSummary data={data} />
 
-      <div className="map-wrap">
-        <MapContainer center={[59.3293, 18.0686]} zoom={11} minZoom={10} maxZoom={15} scrollWheelZoom>
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <GeoJSON
-            data={zones}
-            key={activeLayer}
-            onEachFeature={(feature, layer) => bindPopup(feature as ZoneFeature, layer)}
-            style={(feature) => styleFeature(feature as ZoneFeature, activeLayer)}
-          />
-        </MapContainer>
-        <Legend activeLayer={activeLayer} />
+      <div className="map-card">
+        <div className="map-toolbar" aria-label="Layer controls">
+          <div>
+            <p className="eyebrow">Hotspot Layers</p>
+            <h2>{activeConfig.label}</h2>
+            <p>{activeConfig.description}</p>
+          </div>
+          <div className="segmented-control" role="radiogroup" aria-label="Map demonstration layer">
+            {layerOrder.map((layerId) => {
+              const option = layerConfigs[layerId];
+
+              return (
+                <button
+                  aria-checked={activeLayer === option.id}
+                  className={activeLayer === option.id ? 'active' : ''}
+                  key={option.id}
+                  onClick={() => setActiveLayer(option.id)}
+                  role="radio"
+                  type="button"
+                >
+                  {option.shortLabel}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {selectedFeature && (
+          <aside className="selected-feature-panel" aria-label="Selected grid cell details">
+            <div>
+              <p className="eyebrow">Selected Hotspot</p>
+              <h3>{selectedFeature.properties.hotspot_label}</h3>
+            </div>
+            <dl>
+              {selectedRows(selectedFeature).map(([label, value]) => (
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+            <p>{selectedFeature.properties.planning_relevance}</p>
+            <p>
+              <strong>Suggested intervention:</strong> {selectedFeature.properties.suggested_intervention}
+            </p>
+          </aside>
+        )}
+
+        <div className="map-wrap">
+          {loading && <div className="map-state loading-state">Loading Stockholm hotspot grid...</div>}
+          {error && <div className="map-state error-state">{error}</div>}
+          <MapContainer center={defaultCenter} zoom={11} minZoom={10} maxZoom={15} scrollWheelZoom>
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {data && (
+              <>
+                <FitBounds data={data} />
+                <GeoJSON
+                  data={data}
+                  key={activeLayer}
+                  onEachFeature={(feature, layer) => bindInteractions(feature as UrbanHeatGridFeature, layer)}
+                  style={(feature) => styleFeature(feature as UrbanHeatGridFeature, activeLayer)}
+                />
+              </>
+            )}
+          </MapContainer>
+          <div className="map-status">{loading ? 'Loading data...' : error ? 'Data unavailable' : featureCountLabel}</div>
+          <Legend activeLayer={activeLayer} />
+        </div>
       </div>
     </div>
   );

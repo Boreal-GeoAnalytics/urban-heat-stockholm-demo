@@ -1,11 +1,8 @@
 import MapView from './components/MapView';
 import SidePanel from './components/SidePanel';
 
-const demoDescription =
-  'Boreal GeoAnalytics develops spatial workflows to identify urban heat patterns, environmental exposure zones, and vegetation-related cooling effects across cities. This demonstration uses simplified spatial data to illustrate how satellite-derived indicators and geospatial analysis can support climate adaptation, green infrastructure planning, and urban environmental assessment.';
-
 const disclaimer =
-  'This interactive map is a demonstration prototype. The data are simplified or synthetic and are intended for communication and methodological illustration only. Production-level assessments can be adapted to specific cities, datasets, and decision-making needs.';
+  'This interactive map is a public demonstration prototype. The data are simplified or synthetic and are intended for communication and methodological illustration only. The results do not represent an official heat-risk assessment for Stockholm.';
 
 function App() {
   return (
@@ -16,10 +13,10 @@ function App() {
         </div>
         <div>
           <p className="brand-name">Boreal GeoAnalytics</p>
-          <h1>Stockholm Urban Heat Demonstration</h1>
+          <h1>Stockholm Urban Heat Hotspots & Cooling Priority</h1>
           <p className="subtitle">
-            A public demonstration of urban heat exposure, vegetation cooling potential, and climate adaptation
-            planning indicators for Stockholm.
+            A satellite-based demonstration for mapping heat exposure, green cooling capacity, and priority areas for
+            climate adaptation planning.
           </p>
         </div>
       </header>
@@ -28,7 +25,7 @@ function App() {
         <section className="map-section" aria-label="Interactive Stockholm urban heat map">
           <MapView />
         </section>
-        <SidePanel description={demoDescription} />
+        <SidePanel />
       </main>
 
       <footer className="site-footer">

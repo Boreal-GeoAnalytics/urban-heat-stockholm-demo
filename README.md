@@ -58,6 +58,15 @@ Class fields should use:
 low | moderate | high | very_high
 ```
 
+Public index fields must use a `0–100` scale so legends, popups, and summary metrics remain comparable:
+
+- `green_cooling_capacity`
+- `impervious_surface_pressure`
+- `heat_exposure_index`
+- `cooling_intervention_priority`
+
+The first real GEE export should be tested as a pilot GeoJSON before replacing the public demo dataset.
+
 ## Run Locally
 
 ```bash

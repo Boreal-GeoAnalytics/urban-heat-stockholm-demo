@@ -6,6 +6,7 @@ import { layerConfigs, layerOrder } from '../config/layers';
 import { useGeoJsonData } from '../hooks/useGeoJsonData';
 import type { DemoLayer, UrbanHeatGridCollection, UrbanHeatGridFeature } from '../types/geo';
 import { formatClassLabel, formatNumber, getFeatureColor } from '../utils/colors';
+import { escapeHtml } from '../utils/html';
 import Legend from './Legend';
 import MetricSummary from './MetricSummary';
 
@@ -40,11 +41,15 @@ function styleFeature(feature: UrbanHeatGridFeature | undefined, activeLayer: De
 
 function popupContent(feature: UrbanHeatGridFeature) {
   const props = feature.properties;
+  const gridId = escapeHtml(props.grid_id);
+  const hotspotLabel = escapeHtml(props.hotspot_label);
+  const planningRelevance = escapeHtml(props.planning_relevance);
+  const suggestedIntervention = escapeHtml(props.suggested_intervention);
 
   return `
     <section class="map-popup">
-      <h3>${props.hotspot_label}</h3>
-      <p><strong>Grid ID:</strong> ${props.grid_id}</p>
+      <h3>${hotspotLabel}</h3>
+      <p><strong>Grid ID:</strong> ${gridId}</p>
       <p><strong>Heat exposure:</strong> ${formatClassLabel(props.heat_exposure_class)} (${formatNumber(
         props.heat_exposure_index,
         0,
@@ -57,8 +62,8 @@ function popupContent(feature: UrbanHeatGridFeature) {
       <p><strong>NDVI:</strong> ${formatNumber(props.mean_ndvi, 2)}</p>
       <p><strong>Impervious pressure:</strong> ${formatNumber(props.impervious_surface_pressure, 0)} / 100</p>
       <p><strong>Green cooling capacity:</strong> ${formatNumber(props.green_cooling_capacity, 0)} / 100</p>
-      <p><strong>Planning relevance:</strong> ${props.planning_relevance}</p>
-      <p><strong>Suggested intervention:</strong> ${props.suggested_intervention}</p>
+      <p><strong>Planning relevance:</strong> ${planningRelevance}</p>
+      <p><strong>Suggested intervention:</strong> ${suggestedIntervention}</p>
     </section>
   `;
 }

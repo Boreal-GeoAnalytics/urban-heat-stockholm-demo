@@ -44,6 +44,9 @@ The file `data/stockholm_city.geojson` is not loaded by the app. It is retained 
 Each feature should include:
 
 - `grid_id`
+- `data_quality`
+- `roi_mode`
+- `region_overlap_fraction`
 - `mean_lst_c`
 - `mean_ndvi`
 - `mean_ndbi`
@@ -75,6 +78,8 @@ Public index fields must use a `0–100` scale so legends, popups, and summary m
 - `impervious_surface_pressure`
 - `heat_exposure_index`
 - `cooling_intervention_priority`
+
+Some numeric fields may be `null` when `data_quality` is `no_lst`, `partial`, `mostly_water`, or `no_data`. The frontend treats these cells as limited-interpretation cells rather than low-risk observations.
 
 The first real GEE export should be tested as a pilot GeoJSON before replacing the public demo dataset.
 

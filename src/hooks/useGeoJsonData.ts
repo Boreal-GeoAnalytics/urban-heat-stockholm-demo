@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { IndicatorClass, UrbanHeatGridCollection, UrbanHeatGridProperties } from '../types/geo';
+import type { DataQuality, IndicatorClass, RoiMode, UrbanHeatGridCollection, UrbanHeatGridProperties } from '../types/geo';
 
 type GeoJsonState = {
   data: UrbanHeatGridCollection | null;
@@ -39,6 +39,9 @@ const classFields = [
 ] as const;
 
 const validClasses = new Set<IndicatorClass>(['low', 'moderate', 'high', 'very_high']);
+const validDataQuality = new Set<DataQuality>(['good', 'partial', 'no_lst', 'mostly_water', 'no_data']);
+const validRoiModes = new Set<RoiMode>(['bbox', 'central', 'municipality']);
+const nullExplainingQualities = new Set<DataQuality>(['partial', 'no_lst', 'mostly_water', 'no_data']);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
@@ -47,6 +50,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function validateProperties(properties: unknown, featureIndex: number): asserts properties is UrbanHeatGridProperties {
   if (!isRecord(properties)) {
     throw new Error(`Feature ${featureIndex + 1} is missing a properties object.`);
+  }
+
+  const dataQuality = properties.data_quality;
+  if (dataQuality !== undefined && (typeof dataQuality !== 'string' || !validDataQuality.has(dataQuality as DataQuality))) {
+    throw new Error(`Feature ${featureIndex + 1} has an invalid data_quality value.`);
+  }
+
+  const roiMode = properties.roi_mode;
+  if (roiMode !== undefined && (typeof roiMode !== 'string' || !validRoiModes.has(roiMode as RoiMode))) {
+    throw new Error(`Feature ${featureIndex + 1} has an invalid roi_mode value.`);
   }
 
   for (const field of textFields) {
@@ -58,8 +71,18 @@ function validateProperties(properties: unknown, featureIndex: number): asserts 
 
   for (const field of numericFields) {
     const value = properties[field];
+    if (value === null && typeof dataQuality === 'string' && nullExplainingQualities.has(dataQuality as DataQuality)) {
+      continue;
+    }
     if (typeof value !== 'number' || Number.isNaN(value)) {
       throw new Error(`Feature ${featureIndex + 1} has an invalid or missing numeric field: ${field}.`);
+    }
+  }
+
+  for (const field of ['region_overlap_fraction', 'cell_area_m2', 'intersection_area_m2'] as const) {
+    const value = properties[field];
+    if (value !== undefined && (typeof value !== 'number' || Number.isNaN(value))) {
+      throw new Error(`Feature ${featureIndex + 1} has an invalid numeric metadata field: ${field}.`);
     }
   }
 

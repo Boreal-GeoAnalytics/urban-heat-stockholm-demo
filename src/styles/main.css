@@ -325,6 +325,14 @@ h1 {
   gap: 9px;
 }
 
+.legend-quality {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  border-top: 1px solid rgba(16, 42, 67, 0.12);
+  padding-top: 10px;
+}
+
 .legend-row {
   display: flex;
   gap: 10px;
@@ -338,6 +346,16 @@ h1 {
   height: 14px;
   border: 1px solid rgba(16, 42, 67, 0.18);
   border-radius: 3px;
+}
+
+.quality-swatch {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.35) 0,
+    rgba(255, 255, 255, 0.35) 3px,
+    rgba(16, 42, 67, 0.14) 3px,
+    rgba(16, 42, 67, 0.14) 6px
+  );
 }
 
 .side-panel {

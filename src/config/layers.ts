@@ -16,7 +16,7 @@ export type LayerConfig = {
   classField: ClassPropertyField;
   legendTitle: string;
   palette: Record<IndicatorClass, string>;
-  formatValue: (value: number, properties?: UrbanHeatGridProperties) => string;
+  formatValue: (value: number | null, properties?: UrbanHeatGridProperties) => string;
 };
 
 export const layerConfigs: Record<DemoLayer, LayerConfig> = {

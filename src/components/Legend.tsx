@@ -1,6 +1,6 @@
 import { layerConfigs } from '../config/layers';
 import type { DemoLayer, IndicatorClass } from '../types/geo';
-import { formatClassLabel } from '../utils/colors';
+import { dataQualityColor, formatClassLabel } from '../utils/colors';
 
 const classOrder: IndicatorClass[] = ['low', 'moderate', 'high', 'very_high'];
 
@@ -22,6 +22,16 @@ function Legend({ activeLayer }: LegendProps) {
             <span>{formatClassLabel(className)}</span>
           </div>
         ))}
+      </div>
+      <div className="legend-quality" aria-label="Data quality legend">
+        <div className="legend-row">
+          <span className="legend-swatch quality-swatch" style={{ backgroundColor: dataQualityColor('no_lst') }} />
+          <span>Insufficient thermal data</span>
+        </div>
+        <div className="legend-row">
+          <span className="legend-swatch quality-swatch" style={{ backgroundColor: dataQualityColor('mostly_water') }} />
+          <span>Mostly water / limited interpretation</span>
+        </div>
       </div>
     </div>
   );

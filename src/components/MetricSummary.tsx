@@ -16,19 +16,29 @@ function percentage(count: number, total: number) {
 function MetricSummary({ data }: MetricSummaryProps) {
   const features = data?.features ?? [];
   const totalCells = features.length;
-  const veryHighHeat = features.filter((feature) => feature.properties.heat_exposure_class === 'very_high').length;
-  const highPriority = features.filter((feature) =>
+  const goodCells = features.filter((feature) => (feature.properties.data_quality ?? 'good') === 'good');
+  const mostlyWater = features.filter((feature) => feature.properties.data_quality === 'mostly_water').length;
+  const limitedData = features.filter((feature) => {
+    const dataQuality = feature.properties.data_quality ?? 'good';
+    return dataQuality !== 'good' && dataQuality !== 'mostly_water';
+  }).length;
+  const highPriority = goodCells.filter((feature) =>
     ['high', 'very_high'].includes(feature.properties.cooling_priority_class),
   ).length;
+  const validLstCells = goodCells.filter((feature) => typeof feature.properties.mean_lst_c === 'number');
   const meanLst =
-    totalCells > 0
-      ? features.reduce((sum, feature) => sum + feature.properties.mean_lst_c, 0) / totalCells
+    validLstCells.length > 0
+      ? validLstCells.reduce((sum, feature) => sum + (feature.properties.mean_lst_c ?? 0), 0) / validLstCells.length
       : null;
 
   const metrics = [
     { label: 'Grid cells', value: totalCells.toLocaleString('en-US') },
-    { label: 'Very high heat exposure', value: percentage(veryHighHeat, totalCells) },
-    { label: 'High priority cooling', value: percentage(highPriority, totalCells) },
+    { label: 'Good data cells', value: percentage(goodCells.length, totalCells) },
+    { label: 'High priority cooling', value: percentage(highPriority, goodCells.length) },
+    {
+      label: 'Limited / water cells',
+      value: percentage(limitedData + mostlyWater, totalCells),
+    },
     { label: 'Mean LST', value: meanLst === null ? 'n/a' : `${formatNumber(meanLst, 1)} °C` },
   ];
 

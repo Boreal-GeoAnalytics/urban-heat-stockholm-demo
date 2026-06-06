@@ -5,7 +5,7 @@ import type { Layer, LeafletMouseEvent, Path, PathOptions } from 'leaflet';
 import { layerConfigs, layerOrder } from '../config/layers';
 import { useGeoJsonData } from '../hooks/useGeoJsonData';
 import type { DemoLayer, UrbanHeatGridCollection, UrbanHeatGridFeature } from '../types/geo';
-import { formatClassLabel, formatNumber, getFeatureColor } from '../utils/colors';
+import { formatClassLabel, formatDataQuality, formatNumber, getFeatureColor } from '../utils/colors';
 import { escapeHtml } from '../utils/html';
 import Legend from './Legend';
 import MetricSummary from './MetricSummary';
@@ -30,12 +30,16 @@ function FitBounds({ data }: { data: UrbanHeatGridCollection | null }) {
 }
 
 function styleFeature(feature: UrbanHeatGridFeature | undefined, activeLayer: DemoLayer): PathOptions {
+  const dataQuality = feature?.properties.data_quality;
+  const isLimitedData = dataQuality !== undefined && dataQuality !== 'good';
+
   return {
-    color: '#102a43',
+    color: isLimitedData ? '#52616f' : '#102a43',
+    dashArray: isLimitedData ? '4 3' : undefined,
     fillColor: getFeatureColor(feature, layerConfigs[activeLayer]),
-    fillOpacity: 0.7,
-    opacity: 0.72,
-    weight: 1.1,
+    fillOpacity: isLimitedData ? 0.54 : 0.7,
+    opacity: isLimitedData ? 0.62 : 0.72,
+    weight: isLimitedData ? 0.9 : 1.1,
   };
 }
 
@@ -50,6 +54,8 @@ function popupContent(feature: UrbanHeatGridFeature) {
     <section class="map-popup">
       <h3>${hotspotLabel}</h3>
       <p><strong>Grid ID:</strong> ${gridId}</p>
+      <p><strong>Data quality:</strong> ${formatDataQuality(props.data_quality)}</p>
+      ${props.roi_mode ? `<p><strong>ROI mode:</strong> ${escapeHtml(props.roi_mode)}</p>` : ''}
       <p><strong>Heat exposure:</strong> ${formatClassLabel(props.heat_exposure_class)} (${formatNumber(
         props.heat_exposure_index,
         0,
@@ -62,17 +68,24 @@ function popupContent(feature: UrbanHeatGridFeature) {
       <p><strong>NDVI:</strong> ${formatNumber(props.mean_ndvi, 2)}</p>
       <p><strong>Impervious pressure:</strong> ${formatNumber(props.impervious_surface_pressure, 0)} / 100</p>
       <p><strong>Green cooling capacity:</strong> ${formatNumber(props.green_cooling_capacity, 0)} / 100</p>
+      ${
+        typeof props.region_overlap_fraction === 'number'
+          ? `<p><strong>Region overlap:</strong> ${formatNumber(props.region_overlap_fraction * 100, 0)}%</p>`
+          : ''
+      }
       <p><strong>Planning relevance:</strong> ${planningRelevance}</p>
       <p><strong>Suggested intervention:</strong> ${suggestedIntervention}</p>
     </section>
   `;
 }
 
-function selectedRows(feature: UrbanHeatGridFeature) {
+function selectedRows(feature: UrbanHeatGridFeature): Array<[string, string]> {
   const props = feature.properties;
 
   return [
     ['Grid ID', props.grid_id],
+    ['Data quality', formatDataQuality(props.data_quality)],
+    ...(props.roi_mode ? ([['ROI mode', props.roi_mode]] as [string, string][]) : []),
     ['Heat exposure', `${formatClassLabel(props.heat_exposure_class)} (${formatNumber(props.heat_exposure_index, 0)} / 100)`],
     [
       'Cooling priority',
@@ -82,6 +95,9 @@ function selectedRows(feature: UrbanHeatGridFeature) {
     ['NDVI', formatNumber(props.mean_ndvi, 2)],
     ['Impervious pressure', `${formatNumber(props.impervious_surface_pressure, 0)} / 100`],
     ['Green cooling capacity', `${formatNumber(props.green_cooling_capacity, 0)} / 100`],
+    ...(typeof props.region_overlap_fraction === 'number'
+      ? ([['Region overlap', `${formatNumber(props.region_overlap_fraction * 100, 0)}%`]] as [string, string][])
+      : []),
   ];
 }
 

@@ -2,7 +2,7 @@ import MapView from './components/MapView';
 import SidePanel from './components/SidePanel';
 
 const disclaimer =
-  'This interactive map is a public demonstration prototype. The data are simplified or synthetic and are intended for communication and methodological illustration only. The results do not represent an official heat-risk assessment for Stockholm.';
+  'Public demonstration prototype. Not an official heat-risk assessment.';
 
 function App() {
   return (
@@ -15,8 +15,8 @@ function App() {
           <p className="brand-name">Boreal GeoAnalytics</p>
           <h1>Stockholm Urban Heat Hotspots & Cooling Priority</h1>
           <p className="subtitle">
-            A satellite-based demonstration for mapping heat exposure, green cooling capacity, and priority areas for
-            climate adaptation planning.
+            A satellite-based prototype for exploring heat exposure, green cooling capacity, and cooling-priority
+            patterns in Stockholm.
           </p>
         </div>
       </header>

@@ -10,7 +10,7 @@ import Legend from './Legend';
 
 const defaultCenter: [number, number] = [59.3293, 18.0686];
 
-function FitBounds({ data }: { data: UrbanHeatGridCollection | null }) {
+function MapBoundsController({ data }: { data: UrbanHeatGridCollection | null }) {
   const map = useMap();
 
   useEffect(() => {
@@ -21,6 +21,7 @@ function FitBounds({ data }: { data: UrbanHeatGridCollection | null }) {
     const bounds = leafletGeoJSON(data).getBounds();
     if (bounds.isValid()) {
       map.fitBounds(bounds, { padding: [24, 24], maxZoom: 12 });
+      map.setMaxBounds(bounds.pad(0.35));
     }
   }, [data, map]);
 
@@ -214,14 +215,21 @@ function MapView({ data, error, loading }: MapViewProps) {
         <div className="map-wrap">
           {loading && <div className="map-state loading-state">Loading Stockholm hotspot grid...</div>}
           {error && <div className="map-state error-state">{error}</div>}
-          <MapContainer center={defaultCenter} zoom={11} minZoom={10} maxZoom={15} scrollWheelZoom>
+          <MapContainer
+            center={defaultCenter}
+            zoom={11}
+            minZoom={10}
+            maxZoom={15}
+            maxBoundsViscosity={0.85}
+            scrollWheelZoom
+          >
             <TileLayer
               attribution="Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community"
               url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
             />
             {data && (
               <>
-                <FitBounds data={data} />
+                <MapBoundsController data={data} />
                 <GeoJSON
                   data={data}
                   key={activeLayer}

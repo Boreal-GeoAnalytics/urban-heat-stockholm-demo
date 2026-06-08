@@ -47,20 +47,20 @@ button {
 .site-header {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: 20px;
-  padding: 24px 0 16px;
+  gap: 16px;
+  padding: 18px 0 12px;
   align-items: start;
 }
 
 .brand-mark {
   display: grid;
   place-items: center;
-  width: 54px;
-  height: 54px;
+  width: 48px;
+  height: 48px;
   border: 2px solid var(--blue);
   border-radius: 6px;
   background: var(--surface);
-  box-shadow: inset 0 -8px 0 var(--yellow);
+  box-shadow: inset 0 -7px 0 var(--yellow);
 }
 
 .brand-mark span {
@@ -90,10 +90,10 @@ p {
 
 h1 {
   max-width: 1040px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   color: var(--ink);
-  font-size: clamp(1.85rem, 3.4vw, 3.35rem);
-  line-height: 1.02;
+  font-size: clamp(1.45rem, 2.45vw, 2.45rem);
+  line-height: 1.08;
   letter-spacing: 0;
 }
 
@@ -101,7 +101,7 @@ h1 {
   max-width: 900px;
   margin-bottom: 0;
   color: var(--muted);
-  font-size: 1.05rem;
+  font-size: 0.98rem;
 }
 
 .content-grid {
@@ -117,7 +117,7 @@ h1 {
 
 .map-dashboard {
   display: grid;
-  gap: 14px;
+  gap: 10px;
 }
 
 .map-card,
@@ -135,29 +135,29 @@ h1 {
 .metric-summary {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: 10px;
 }
 
 .metric-card {
-  min-height: 86px;
+  min-height: 70px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 14px 16px;
+  padding: 11px 13px;
   background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 10px 24px rgba(16, 42, 67, 0.06);
+  box-shadow: 0 8px 18px rgba(16, 42, 67, 0.045);
 }
 
 .metric-card span {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
 }
 
 .metric-card strong {
   color: var(--ink);
-  font-size: 1.55rem;
+  font-size: 1.05rem;
   line-height: 1;
 }
 

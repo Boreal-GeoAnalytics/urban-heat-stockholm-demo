@@ -13,10 +13,9 @@ function App() {
         </div>
         <div>
           <p className="brand-name">Boreal GeoAnalytics</p>
-          <h1>Stockholm Urban Heat Hotspots & Cooling Priority</h1>
+          <h1>Stockholm Urban Climate Demo</h1>
           <p className="subtitle">
-            A satellite-based prototype for exploring heat exposure, green cooling capacity, and cooling-priority
-            patterns in Stockholm.
+            Heat exposure, green cooling capacity, and cooling-priority patterns for urban climate adaptation.
           </p>
         </div>
       </header>

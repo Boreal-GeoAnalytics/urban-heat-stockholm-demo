@@ -32,7 +32,6 @@ function MetricSummary({ data }: MetricSummaryProps) {
       : null;
 
   const metrics = [
-    { label: 'Grid cells', value: totalCells.toLocaleString('en-US') },
     { label: 'Good data cells', value: percentage(goodCells.length, totalCells) },
     { label: 'High priority cooling', value: percentage(highPriority, goodCells.length) },
     {

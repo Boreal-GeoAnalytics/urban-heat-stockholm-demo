@@ -13,7 +13,9 @@ function App() {
   return (
     <div className="app-shell">
       <header className="site-header">
-        <img className="brand-mark" src={logoSrc} alt="Boreal GeoAnalytics logo" />
+        <a className="brand-link" href="https://www.borealgeoanalytics.com/" aria-label="Boreal GeoAnalytics website">
+          <img className="brand-mark" src={logoSrc} alt="" />
+        </a>
         <div>
           <p className="brand-name">Boreal GeoAnalytics</p>
           <h1>Stockholm Urban Climate Demo</h1>

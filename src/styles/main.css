@@ -61,6 +61,18 @@ button {
   box-shadow: 0 1px 4px rgba(16, 42, 67, 0.08);
 }
 
+.brand-link {
+  display: block;
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+}
+
+.brand-link:focus-visible {
+  outline: 3px solid rgba(0, 106, 167, 0.35);
+  outline-offset: 3px;
+}
+
 .brand-name,
 .eyebrow {
   margin: 0 0 6px;

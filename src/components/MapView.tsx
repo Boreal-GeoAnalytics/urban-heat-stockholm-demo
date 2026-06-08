@@ -4,7 +4,7 @@ import { geoJSON as leafletGeoJSON } from 'leaflet';
 import type { Layer, LeafletMouseEvent, Path, PathOptions } from 'leaflet';
 import { layerConfigs, layerOrder } from '../config/layers';
 import type { DemoLayer, UrbanHeatGridCollection, UrbanHeatGridFeature } from '../types/geo';
-import { formatClassLabel, formatDataQuality, formatNumber, getFeatureColor } from '../utils/colors';
+import { formatClassLabel, formatDataQuality, formatLstSource, formatNumber, getFeatureColor } from '../utils/colors';
 import { escapeHtml } from '../utils/html';
 import Legend from './Legend';
 
@@ -53,6 +53,20 @@ function popupContent(feature: UrbanHeatGridFeature) {
       <h3>${hotspotLabel}</h3>
       <p><strong>Grid ID:</strong> ${gridId}</p>
       <p><strong>Data quality:</strong> ${formatDataQuality(props.data_quality)}</p>
+      <p><strong>Thermal source:</strong> ${formatLstSource(props.lst_source)}</p>
+      ${
+        typeof props.lst_landsat_fraction === 'number'
+          ? `<p><strong>Landsat fraction:</strong> ${formatNumber(props.lst_landsat_fraction * 100, 0)}%</p>`
+          : ''
+      }
+      ${
+        typeof props.lst_modis_fallback_fraction === 'number'
+          ? `<p><strong>MODIS fallback fraction:</strong> ${formatNumber(
+              props.lst_modis_fallback_fraction * 100,
+              0,
+            )}%</p>`
+          : ''
+      }
       ${props.roi_mode ? `<p><strong>ROI mode:</strong> ${escapeHtml(props.roi_mode)}</p>` : ''}
       <p><strong>Heat exposure:</strong> ${formatClassLabel(props.heat_exposure_class)} (${formatNumber(
         props.heat_exposure_index,
@@ -83,6 +97,16 @@ function selectedRows(feature: UrbanHeatGridFeature): Array<[string, string]> {
   return [
     ['Grid ID', props.grid_id],
     ['Data quality', formatDataQuality(props.data_quality)],
+    ['Thermal source', formatLstSource(props.lst_source)],
+    ...(typeof props.lst_landsat_fraction === 'number'
+      ? ([['Landsat fraction', `${formatNumber(props.lst_landsat_fraction * 100, 0)}%`]] as [string, string][])
+      : []),
+    ...(typeof props.lst_modis_fallback_fraction === 'number'
+      ? ([['MODIS fallback fraction', `${formatNumber(props.lst_modis_fallback_fraction * 100, 0)}%`]] as [
+          string,
+          string,
+        ][])
+      : []),
     ...(props.roi_mode ? ([['ROI mode', props.roi_mode]] as [string, string][]) : []),
     ['Heat exposure', `${formatClassLabel(props.heat_exposure_class)} (${formatNumber(props.heat_exposure_index, 0)} / 100)`],
     [

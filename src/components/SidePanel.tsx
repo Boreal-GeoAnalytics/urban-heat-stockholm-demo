@@ -39,11 +39,20 @@ function SidePanel({ data }: SidePanelProps) {
         <div>
           <p>Thermal signal + surface composition + green-blue cooling = planning-ready hotspot indicators.</p>
           <p>
+            Landsat land surface temperature is the preferred thermal source. Where Landsat LST is unavailable, the
+            export may use MODIS daytime LST as a fallback.
+          </p>
+          <p>
+            MODIS has coarser resolution, so fallback cells should be interpreted as coverage-improved thermal
+            estimates, not fine-scale 250 m thermal observations.
+          </p>
+          <p>
             The current version uses a lightweight GeoJSON grid for interaction. Raster tiles may be added later.
           </p>
           <p>
             Layer values are simplified for public communication and methodological illustration. Interpret patterns as
-            relative prototype signals, not as validated operational risk classifications.
+            relative prototype signals, not as validated operational risk classifications or an official heat-risk
+            assessment.
           </p>
         </div>
       </details>

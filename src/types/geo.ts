@@ -6,6 +6,8 @@ export type DemoLayer = 'heat_exposure' | 'cooling_priority' | 'green_cooling' |
 
 export type DataQuality = 'good' | 'partial' | 'no_lst' | 'mostly_water' | 'no_data';
 
+export type LstSource = 'landsat' | 'modis_fallback' | 'mixed_landsat_modis' | 'no_lst' | 'unknown';
+
 export type RoiMode = 'bbox' | 'central' | 'municipality';
 
 export type UrbanHeatGridProperties = {
@@ -21,6 +23,9 @@ export type UrbanHeatGridProperties = {
   valid_core_indices?: number;
   water_fraction?: number | null;
   land_fraction?: number | null;
+  lst_source?: LstSource;
+  lst_landsat_fraction?: number | null;
+  lst_modis_fallback_fraction?: number | null;
   mean_lst_c?: number | null;
   mean_ndvi?: number | null;
   mean_ndbi?: number | null;

@@ -47,6 +47,9 @@ Each feature should include:
 - `data_quality`
 - `roi_mode`
 - `region_overlap_fraction`
+- `lst_source` optional
+- `lst_landsat_fraction` optional
+- `lst_modis_fallback_fraction` optional
 - `mean_lst_c`
 - `mean_ndvi`
 - `mean_ndbi`
@@ -80,6 +83,16 @@ Public index fields must use a `0–100` scale so legends, popups, and summary m
 - `cooling_intervention_priority`
 
 Some numeric fields may be `null` when `data_quality` is `no_lst`, `partial`, `mostly_water`, or `no_data`. The frontend treats these cells as limited-interpretation cells rather than low-risk observations.
+
+The optional `lst_source` field describes the thermal source behind each cell:
+
+- `landsat`: Landsat LST was used.
+- `modis_fallback`: MODIS daytime LST was used because Landsat LST was unavailable.
+- `mixed_landsat_modis`: Both Landsat and MODIS fallback contributed to the cell.
+- `no_lst`: No usable thermal source was available.
+- `unknown`: The thermal source was not specified.
+
+When present, `lst_landsat_fraction` and `lst_modis_fallback_fraction` use a `0–1` scale and indicate the cell fraction covered by each source. MODIS fallback improves thermal coverage where Landsat is missing, but MODIS is coarser resolution; fallback cells should be read as coverage-improved thermal estimates, not fine-scale 250 m thermal observations.
 
 The first real GEE export should be tested as a pilot GeoJSON before replacing the public demo dataset.
 

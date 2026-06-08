@@ -1,5 +1,5 @@
 import type { LayerConfig } from '../config/layers';
-import type { DataQuality, IndicatorClass, UrbanHeatGridFeature } from '../types/geo';
+import type { DataQuality, IndicatorClass, LstSource, UrbanHeatGridFeature } from '../types/geo';
 
 export function formatClassLabel(className: IndicatorClass) {
   const labels: Record<IndicatorClass, string> = {
@@ -41,6 +41,18 @@ export function formatDataQuality(value: DataQuality | undefined) {
   };
 
   return value ? labels[value] ?? 'Unknown data coverage' : 'Not specified';
+}
+
+export function formatLstSource(value: LstSource | undefined) {
+  const labels: Record<LstSource, string> = {
+    landsat: 'Landsat',
+    modis_fallback: 'MODIS fallback',
+    mixed_landsat_modis: 'Mixed Landsat + MODIS',
+    no_lst: 'No thermal source',
+    unknown: 'Unknown thermal source',
+  };
+
+  return value ? labels[value] ?? 'Unknown thermal source' : 'Not specified';
 }
 
 export function dataQualityColor(value: DataQuality | undefined) {

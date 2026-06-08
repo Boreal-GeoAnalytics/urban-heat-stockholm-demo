@@ -5,15 +5,15 @@ import { useGeoJsonData } from './hooks/useGeoJsonData';
 const disclaimer =
   'Public demonstration prototype. Not an official heat-risk assessment.';
 
+const logoSrc = `${import.meta.env.BASE_URL}assets/boreal-geoanalytics-logo.png`;
+
 function App() {
   const { data, error, loading } = useGeoJsonData();
 
   return (
     <div className="app-shell">
       <header className="site-header">
-        <div className="brand-mark" aria-hidden="true">
-          <span />
-        </div>
+        <img className="brand-mark" src={logoSrc} alt="Boreal GeoAnalytics logo" />
         <div>
           <p className="brand-name">Boreal GeoAnalytics</p>
           <h1>Stockholm Urban Climate Demo</h1>

@@ -1,6 +1,15 @@
-function SidePanel() {
+import type { UrbanHeatGridCollection } from '../types/geo';
+import MetricSummary from './MetricSummary';
+
+type SidePanelProps = {
+  data: UrbanHeatGridCollection | null;
+};
+
+function SidePanel({ data }: SidePanelProps) {
   return (
     <aside className="side-panel" aria-label="Urban climate intelligence">
+      <MetricSummary data={data} />
+
       <section className="side-section">
         <h2>Urban Climate Intelligence</h2>
         <p>

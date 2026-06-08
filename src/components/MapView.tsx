@@ -3,12 +3,10 @@ import { GeoJSON, MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { geoJSON as leafletGeoJSON } from 'leaflet';
 import type { Layer, LeafletMouseEvent, Path, PathOptions } from 'leaflet';
 import { layerConfigs, layerOrder } from '../config/layers';
-import { useGeoJsonData } from '../hooks/useGeoJsonData';
 import type { DemoLayer, UrbanHeatGridCollection, UrbanHeatGridFeature } from '../types/geo';
 import { formatClassLabel, formatDataQuality, formatNumber, getFeatureColor } from '../utils/colors';
 import { escapeHtml } from '../utils/html';
 import Legend from './Legend';
-import MetricSummary from './MetricSummary';
 
 const defaultCenter: [number, number] = [59.3293, 18.0686];
 
@@ -101,10 +99,15 @@ function selectedRows(feature: UrbanHeatGridFeature): Array<[string, string]> {
   ];
 }
 
-function MapView() {
+type MapViewProps = {
+  data: UrbanHeatGridCollection | null;
+  error: string | null;
+  loading: boolean;
+};
+
+function MapView({ data, error, loading }: MapViewProps) {
   const [activeLayer, setActiveLayer] = useState<DemoLayer>('heat_exposure');
   const [selectedFeature, setSelectedFeature] = useState<UrbanHeatGridFeature | null>(null);
-  const { data, error, loading } = useGeoJsonData();
   const activeConfig = layerConfigs[activeLayer];
 
   const featureCountLabel = useMemo(() => {
@@ -136,8 +139,6 @@ function MapView() {
 
   return (
     <div className="map-dashboard">
-      <MetricSummary data={data} />
-
       <div className="map-card">
         <div className="map-toolbar" aria-label="Layer controls">
           <div>

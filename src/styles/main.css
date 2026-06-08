@@ -134,16 +134,16 @@ h1 {
 
 .metric-summary {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
 .metric-card {
-  min-height: 70px;
+  min-height: 68px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 11px 13px;
-  background: rgba(255, 255, 255, 0.96);
+  padding: 10px 12px;
+  background: var(--soft);
   box-shadow: 0 8px 18px rgba(16, 42, 67, 0.045);
 }
 
@@ -438,10 +438,6 @@ h1 {
 }
 
 @media (max-width: 900px) {
-  .metric-summary {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .map-toolbar {
     display: grid;
   }
